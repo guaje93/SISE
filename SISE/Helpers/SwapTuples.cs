@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SISE
 {
-    class Helpers
+    public class SwapTuples
     {
         public static void Swap<T>(ref T lhs, ref T rhs)
         {

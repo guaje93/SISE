@@ -15,6 +15,12 @@ namespace SISE
             _solvedState = solvedState;
         }
 
+        public int MaxDepth => throw new System.NotImplementedException();
+
+        public int NumberOfVisitedStates => throw new System.NotImplementedException();
+
+        public int NumberOfProcessedStates => throw new System.NotImplementedException();
+
         public string Solve()
         {
             throw new System.NotImplementedException();

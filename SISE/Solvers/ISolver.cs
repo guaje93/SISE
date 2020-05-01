@@ -7,7 +7,9 @@ namespace SISE.Solution
     public interface ISolver
     {
         string Solve();
-
+        int MaxDepth { get; }
+        int NumberOfVisitedStates { get; }
+        int NumberOfProcessedStates { get; }
         public bool IsPuzzleStateNew(IEnumerable<State> enumerable, State newState)
         {
             foreach (State state in enumerable)
@@ -19,5 +21,7 @@ namespace SISE.Solution
             }
             return true;
         }
+        public bool IsSolution(State currentState, State solution) => currentState.Equals(solution);
+
     }
 }

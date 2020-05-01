@@ -11,13 +11,13 @@ namespace SISE
     public class Initializer
 
     {
-        private readonly static int[,] _solved = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 0 } };
-        private readonly static State _solvedState = new State(_solved, new Point(3, 3));
+        private readonly int[,] _solved = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 0 } };
+        private readonly State _solvedState = null;
 
         public Tuple<int, int> MatrixSize { get; private set; }
         public State InitialState { get; private set; }
-        public string SolutionFileDestination { get; }
-        public string SolutionInformationDestination { get; }
+        public string SolutionFileDestination { get; private set; }
+        public string SolutionInformationDestination { get; private set; }
         public ISolver Solver { get; private set; }
 
 
@@ -25,8 +25,8 @@ namespace SISE
         {
             SolutionFileDestination = args[3];
             SolutionInformationDestination = args[4];
-            ReadInitialState(args);
             InitialState = ReadInitialState(args);
+            _solvedState = new State(_solved, new Point(3, 3));
             Solver = GetSolver(args);
 
         }
@@ -50,7 +50,6 @@ namespace SISE
         private State ReadInitialState(string[] args)
         {
             string data;
-            int height = -1, width = -1;
             int[,] puzzle = null;
             Point point = new Point();
             try
@@ -65,16 +64,16 @@ namespace SISE
                     string[] dimentions = data.Split(' ');
                     MatrixSize = Tuple.Create(Convert.ToInt32(dimentions[0]), Convert.ToInt32(dimentions[1]));
 
-                    puzzle = new int[height, width];
+                    puzzle = new int[MatrixSize.Item1, MatrixSize.Item2];
 
-                    for (int i = 0; i < height; i++)
+                    for (int i = 0; i < MatrixSize.Item1; i++)
                     {
                         string[] values = sr.ReadLine().Split(' ');
-                        if (values.Count() != width)
+                        if (values.Count() != MatrixSize.Item2)
                         {
                             throw new Exception(String.Format("Values in row {0} were not specified correctly", i));
                         }
-                        for (int j = 0; j < width; j++)
+                        for (int j = 0; j < MatrixSize.Item2; j++)
                         {
                             int value = Convert.ToInt32(values[j]);
                             if (value == 0)
@@ -93,7 +92,7 @@ namespace SISE
                 Console.ReadKey();
                 Environment.Exit(-1);
             }
-            return new State(puzzle, point);
+            return new State(puzzle, point, MatrixSize);
 
         }
 

@@ -43,6 +43,7 @@ namespace SISE
             nextStates = new List<State>();
             Array.Copy(state.puzzle, puzzle, state.puzzle.Length);
             zeroIndex = new Point(state.zeroIndex.X, state.zeroIndex.Y);
+            moveSet = state.moveSet;
         }
 
         public State Move(char direction)
@@ -55,19 +56,19 @@ namespace SISE
             switch (direction)
             {
                 case 'u':
-                    Helpers.Swap(ref newState.puzzle[zeroIndex.X, zeroIndex.Y], ref newState.puzzle[zeroIndex.X - 1, zeroIndex.Y]);
+                    SwapTuples.Swap(ref newState.puzzle[zeroIndex.X, zeroIndex.Y], ref newState.puzzle[zeroIndex.X - 1, zeroIndex.Y]);
                     newState.zeroIndex.X--;
                     break;
                 case 'd':
-                    Helpers.Swap(ref newState.puzzle[zeroIndex.X, zeroIndex.Y], ref newState.puzzle[zeroIndex.X + 1, zeroIndex.Y]);
+                    SwapTuples.Swap(ref newState.puzzle[zeroIndex.X, zeroIndex.Y], ref newState.puzzle[zeroIndex.X + 1, zeroIndex.Y]);
                     newState.zeroIndex.X++;
                     break;
                 case 'l':
-                    Helpers.Swap(ref newState.puzzle[zeroIndex.X, zeroIndex.Y], ref newState.puzzle[zeroIndex.X, zeroIndex.Y - 1]);
+                    SwapTuples.Swap(ref newState.puzzle[zeroIndex.X, zeroIndex.Y], ref newState.puzzle[zeroIndex.X, zeroIndex.Y - 1]);
                     newState.zeroIndex.Y--;
                     break;
                 case 'r':
-                    Helpers.Swap(ref newState.puzzle[zeroIndex.X, zeroIndex.Y], ref newState.puzzle[zeroIndex.X, zeroIndex.Y + 1]);
+                    SwapTuples.Swap(ref newState.puzzle[zeroIndex.X, zeroIndex.Y], ref newState.puzzle[zeroIndex.X, zeroIndex.Y + 1]);
                     newState.zeroIndex.Y++;
                     break;
                 default:

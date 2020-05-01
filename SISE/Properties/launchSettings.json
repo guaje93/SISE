@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "BFS_1": {
+      "commandName": "Project",
+      "commandLineArgs": "bfs DRUL 4x4_01_0001.txt 4x4_01_0001_bfs_rdul_sol.txt 4x4_01_0001_bfs_rdul_stats.txt"
+    },
+    "DFS_1": {
+      "commandName": "Project",
+      "commandLineArgs": "dfs DRUL 4x4_01_0001.txt 4x4_01_0001_dfs_rdul_sol.txt 4x4_01_0001_dfs_rdul_stats.txt"
+    }
+  }
+}
