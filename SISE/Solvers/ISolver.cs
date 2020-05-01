@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SISE.Solution
 {
-    interface ISolver
+    public interface ISolver
     {
         string Solve();
 
