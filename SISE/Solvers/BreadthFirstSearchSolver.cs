@@ -29,7 +29,7 @@ namespace SISE
 
             toVisit.Enqueue(SolutionState);
 
-            while (toVisit.Count > 0)
+            while (toVisit.Count > 0 )
             {
                 State currentState = toVisit.Dequeue();
                 visited.Enqueue(currentState);
@@ -37,10 +37,14 @@ namespace SISE
                 if (currentState.depth > MaxDepth)
                     MaxDepth = currentState.depth;
 
+                Console.WriteLine(currentState);
+                Console.WriteLine("\n");
+
                 if ((this as ISolver).IsPuzzleSolution(currentState, Solved))
                 {
                     solutionString = currentState.moveSet;
                     solutionFound = true;
+                    break;
                 }
                 else
                 {

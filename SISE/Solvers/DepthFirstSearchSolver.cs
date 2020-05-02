@@ -33,17 +33,21 @@ namespace SISE.Solution
             Stack<State> toVisit = new Stack<State>();
             toVisit.Push(SolutionState);
             NumberOfVisitedStates = 1;
-            while (toVisit.Count != 0 && !solutionFound)
+            while (toVisit.Count != 0 )
             {
                 State currentState = toVisit.Pop();
 
                 if (currentState.depth > MaxDepth)
                     MaxDepth = currentState.depth;
                 
+//                Console.WriteLine(currentState);
+//                Console.WriteLine("\n");
+
                 if ((this as ISolver).IsPuzzleSolution(currentState, Solved))
                 {
                     solutionFound = true;
                     solutionString = currentState.moveSet;
+                    break;
                 }
                 else
                 {
@@ -63,8 +67,6 @@ namespace SISE.Solution
                         }
                     }
                 }
-                Console.WriteLine(currentState);
-                Console.WriteLine("\n");
             }
 
             NumberOfProcessedStates = visited.Count;

@@ -11,6 +11,10 @@
     "AStar_1": {
       "commandName": "Project",
       "commandLineArgs": "astr hamm 4x4_01_0001.txt 4x4_01_0001_astr_manh_sol.txt 4x4_01_0001_astr_manh_stats.txt"
+    },
+    "AStar_2": {
+      "commandName": "Project",
+      "commandLineArgs": "astr manh 4x4_01_0001.txt 4x4_01_0001_astr_manh_sol.txt 4x4_01_0001_astr_manh_stats.txt"
     }
   }
 }
