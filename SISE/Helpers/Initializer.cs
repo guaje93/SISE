@@ -33,9 +33,11 @@ namespace SISE
             {
                 if (!(args[1].Length == 4 &&
                     args[1].Distinct().Count() == args[1].Length &&
-                    args[1].All(p => "drul".ToArray().Contains(p))))
+                    args[1].All(p => "DRUL".ToArray().Contains(p))))
+                {
                     Console.WriteLine($"Wrong strategy: {args[1]}");
-                return false;
+                    return false;
+                }
             }
             if (args[0] == "astr" && (args[1] != "manh" && (args[1] != "hamm")))
             {
