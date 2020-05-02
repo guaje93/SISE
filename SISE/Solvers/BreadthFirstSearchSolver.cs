@@ -48,7 +48,7 @@ namespace SISE
 
                     foreach (State state in currentState.nextStates)
                     {
-                        if (toVisit.Concat(visited).All(p => !p.Equals(state)))
+                        if (!toVisit.Concat(visited).Any(p => p.Equals(state)))
                         {
                             toVisit.Enqueue(state);
                         }
