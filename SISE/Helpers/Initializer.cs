@@ -1,11 +1,9 @@
 ﻿using SISE.Model;
 using SISE.Solution;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace SISE
 {
@@ -135,8 +133,6 @@ namespace SISE
                 Environment.Exit(-1);
             }
             return new State(puzzle, point, MatrixSize);
-
         }
-
     }
 }

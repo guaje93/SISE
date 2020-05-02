@@ -56,19 +56,19 @@ namespace SISE
             switch (direction)
             {
                 case 'u':
-                    SwapTuples.Swap(ref newState.puzzle[zeroIndex.X, zeroIndex.Y], ref newState.puzzle[zeroIndex.X - 1, zeroIndex.Y]);
+                    Swap(ref newState.puzzle[zeroIndex.X, zeroIndex.Y], ref newState.puzzle[zeroIndex.X - 1, zeroIndex.Y]);
                     newState.zeroIndex.X--;
                     break;
                 case 'd':
-                    SwapTuples.Swap(ref newState.puzzle[zeroIndex.X, zeroIndex.Y], ref newState.puzzle[zeroIndex.X + 1, zeroIndex.Y]);
+                    Swap(ref newState.puzzle[zeroIndex.X, zeroIndex.Y], ref newState.puzzle[zeroIndex.X + 1, zeroIndex.Y]);
                     newState.zeroIndex.X++;
                     break;
                 case 'l':
-                    SwapTuples.Swap(ref newState.puzzle[zeroIndex.X, zeroIndex.Y], ref newState.puzzle[zeroIndex.X, zeroIndex.Y - 1]);
+                    Swap(ref newState.puzzle[zeroIndex.X, zeroIndex.Y], ref newState.puzzle[zeroIndex.X, zeroIndex.Y - 1]);
                     newState.zeroIndex.Y--;
                     break;
                 case 'r':
-                    SwapTuples.Swap(ref newState.puzzle[zeroIndex.X, zeroIndex.Y], ref newState.puzzle[zeroIndex.X, zeroIndex.Y + 1]);
+                    Swap(ref newState.puzzle[zeroIndex.X, zeroIndex.Y], ref newState.puzzle[zeroIndex.X, zeroIndex.Y + 1]);
                     newState.zeroIndex.Y++;
                     break;
                 default:
@@ -103,6 +103,13 @@ namespace SISE
                      (this.move == 'u' && direction == 'd') ||
                      (this.move == 'r' && direction == 'l') ||
                      (this.move == 'd' && direction == 'u'));
+
+        private void Swap<T>(ref T lhs, ref T rhs)
+        {
+            T temp = lhs;
+            lhs = rhs;
+            rhs = temp;
+        }
 
         public override string ToString()
         {
