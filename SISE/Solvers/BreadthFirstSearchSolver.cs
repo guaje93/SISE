@@ -37,7 +37,7 @@ namespace SISE
                 if (currentState.depth > MaxDepth)
                     MaxDepth = currentState.depth;
 
-                if ((this as ISolver).IsSolution(currentState, Solved))
+                if ((this as ISolver).IsPuzzleSolution(currentState, Solved))
                 {
                     solutionString = currentState.moveSet;
                     solutionFound = true;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SISE.Solution
@@ -10,18 +11,8 @@ namespace SISE.Solution
         int MaxDepth { get; }
         int NumberOfVisitedStates { get; }
         int NumberOfProcessedStates { get; }
-        public bool IsPuzzleStateNew(IEnumerable<State> enumerable, State newState)
-        {
-            foreach (State state in enumerable)
-            {
-                if (state.Equals(newState))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-        public bool IsSolution(State currentState, State solution) => currentState.Equals(solution);
+        public bool DoesPuzzleNotReply(IEnumerable<State> enumerable, State newState) => !enumerable.Any(p => p.Equals(newState));
+        public bool IsPuzzleSolution(State currentState, State solution) => currentState.Equals(solution);
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using SISE.Solution;
+﻿using SISE.Model;
+using SISE.Solution;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,6 +13,41 @@ namespace SISE
 
     {
         private readonly int[,] _solved = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 0 } };
+
+        internal static bool Validate(string[] args)
+        {
+            if (args.Count() != 5)
+            {
+                Console.WriteLine("wrong number of arguments, given arguments:");
+                int nr = 0;
+                foreach (var arg in args)
+                {
+                    Console.WriteLine(nr++ + ": " + arg);
+                }
+                return false;
+            }
+            if (args[0] != "bfs" && args[0] != "dfs" && args[0] != "astr")
+            {
+                Console.WriteLine("Wrong algorithm type");
+                return false;
+            }
+            if (args[0] == "bfs" || args[0] == "dfs")
+            {
+                if (!(args[1].Length == 4 &&
+                    args[1].Distinct().Count() == args[1].Length &&
+                    args[1].All(p => "drul".ToArray().Contains(p))))
+                    Console.WriteLine($"Wrong strategy: {args[1]}");
+                return false;
+            }
+            if (args[0] == "astr" && (args[1] != "manh" && (args[1] != "hamm")))
+            {
+                Console.WriteLine($"Wrong strategy: {args[1]}");
+                return false;
+            }
+            return true;
+
+        }
+
         private readonly State _solvedState = null;
 
         public Tuple<int, int> MatrixSize { get; private set; }
@@ -28,7 +64,6 @@ namespace SISE
             InitialState = ReadInitialState(args);
             _solvedState = new State(_solved, new Point(3, 3));
             Solver = GetSolver(args);
-
         }
 
         private ISolver GetSolver(string[] args)
@@ -40,7 +75,14 @@ namespace SISE
                 case "dfs":
                     return new DepthFirstSearchSolver(InitialState, args[1], _solvedState);
                 case "astr":
-                    return new AStarSolver(InitialState, args[1], _solvedState);
+                    {
+                        if (args[1] == "manh")
+                            return new AStarSolver(InitialState, new Manhattan(), _solvedState);
+                        else if (args[1] == "hamm")
+                            return new AStarSolver(InitialState, new Hamming(), _solvedState);
+                        else
+                            return null;
+                    }
                 default:
                     Console.WriteLine("wrong type parameter");
                     return null;
