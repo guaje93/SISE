@@ -41,7 +41,7 @@ namespace SISE
                 currentState = priorityQueue.Dequeue();
                 if (visitedStates.Any())
                 {
-                    if(visitedStates.All(p=>!p.Equals(currentState)))
+                    while(visitedStates.Any(p=>p.Equals(currentState)))
                         currentState = priorityQueue.Dequeue();
                 }
 
