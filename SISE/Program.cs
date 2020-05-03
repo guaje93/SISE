@@ -1,6 +1,9 @@
 ﻿using SISE.Logic;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Text;
 
 namespace SISE
 {
@@ -19,9 +22,75 @@ namespace SISE
 
         static void Main(string[] args)
         {
-            Initializer initializer = Initialize(args);
-            RunSolver();
-            SaveResult(initializer.SolutionFileDestination, initializer.SolutionInformationDestination);
+            List<string[]> argumentList = LoadArguments();
+            foreach (string[] argument in argumentList)
+            {
+                Initializer initializer = Initialize(argument);
+                RunSolver();
+                SaveResult(initializer.SolutionFileDestination, initializer.SolutionInformationDestination);
+            }
+        }
+
+        private static List<string[]> LoadArguments()
+        {
+            List<string[]> launchArgs = new List<string[]>();
+            string[] strategies = { "bfs", "dfs", "astrM", "astrH" };
+            string[] searchOrders = { "RDUL", "RDLU", "DRUL", "DRLU", "LUDR", "LURD", "ULDR", "ULRD" };
+            string workingDirectory = Environment.CurrentDirectory;
+            string projectDir = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Data\"));
+
+            var files = Directory.GetFiles(projectDir);
+
+            string results = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Results\"));
+
+            foreach (var strategy in strategies)
+            {
+                foreach (var file in files)
+                {
+                    if (strategy == "astrM" || strategy == "astrH")
+                    {
+                        var heuristic = strategy == "astrM" ? "Manhattan" : "Hamming";
+                        var splittedResultFileName = file.Substring(file.LastIndexOf(@"\") + 1).Split('.')[0];
+                        var baseResultName = $"{results}{splittedResultFileName}_{heuristic}_astr_"; 
+
+                        var solutionFileName = $"{baseResultName}_sol.txt";
+                        var resultFileName = $"{baseResultName}stas.txt";
+                        var args = new string[]
+                        {
+                       "astr",
+                        heuristic,
+                        file,
+                        solutionFileName,
+                        resultFileName
+                        };
+                        launchArgs.Add(args);
+                    }
+                    else
+                    {
+                        foreach (var search in searchOrders)
+                        {
+                            var splittedResultFileName = file.Substring(file.LastIndexOf(@"\") + 1).Split('.')[0];
+                            var baseResultName = $"{results}{splittedResultFileName}_{strategy}_{search}_";
+                            var solutionFileName = $"{baseResultName}_sol.txt";
+                            var resultFileName = $"{baseResultName}stas.txt";
+
+                            var args = new string[]
+                            {
+                            strategy,
+                            search,
+                            file,
+                            solutionFileName,
+                            resultFileName
+                            };
+                            launchArgs.Add(args);
+                        }
+
+                    }
+
+                }
+            }
+
+            return launchArgs;
         }
 
         private static Initializer Initialize(string[] args)
