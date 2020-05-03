@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using SISE.Model;
 
-namespace SISE.Solution
+namespace SISE.Logic
 {
     public interface ISolver
     {

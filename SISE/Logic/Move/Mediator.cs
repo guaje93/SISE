@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SISE.Model;
 using System.Drawing;
-using System.Text;
 
-namespace SISE.Model.Move
+namespace SISE.Logic
 {
     class Mediator
     {

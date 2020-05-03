@@ -1,11 +1,10 @@
 ﻿using SISE.Model;
-using SISE.Solution;
 using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 
-namespace SISE
+namespace SISE.Logic
 {
     public class Initializer
     {

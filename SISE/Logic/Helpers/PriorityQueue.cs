@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace SISE.Helpers
+namespace SISE.Logic
 {
     public class PriorityQueue<T>
     {

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SISE.Model;
 using System.Drawing;
-using System.Text;
 
-namespace SISE.Model.Move
+namespace SISE.Logic
 {
-    public class MoveLeft : IMoveable
+    public class MoveUp : IMoveable
     {
         #region Methods
 
@@ -22,13 +20,13 @@ namespace SISE.Model.Move
 
         private void MoveZero(State state, State newState)
         {
-            Swap(ref newState.Puzzle[state.ZeroIndex.X, state.ZeroIndex.Y], ref newState.Puzzle[state.ZeroIndex.X, state.ZeroIndex.Y - 1]);
-            newState.ZeroIndex = new Point(newState.ZeroIndex.X, newState.ZeroIndex.Y - 1);
+            Swap(ref newState.Puzzle[state.ZeroIndex.X, state.ZeroIndex.Y], ref newState.Puzzle[state.ZeroIndex.X - 1, state.ZeroIndex.Y]);
+            newState.ZeroIndex = new Point(newState.ZeroIndex.X - 1, newState.ZeroIndex.Y);
         }
 
-        private void Swap(ref int lhs, ref int rhs)
+        private void Swap<T>(ref T lhs, ref T rhs)
         {
-            int temp = lhs;
+            T temp = lhs;
             lhs = rhs;
             rhs = temp;
         }

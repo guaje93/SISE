@@ -1,11 +1,8 @@
-﻿using SISE.Helpers;
-using SISE.Model;
-using SISE.Solution;
-using System;
+﻿using SISE.Model;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SISE
+namespace SISE.Logic
 {
     public class AStarSolver : ISolver
     {

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace SISE.Helpers
+namespace SISE.Logic
 {
     public class ResultGenerators
     {

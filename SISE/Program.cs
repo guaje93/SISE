@@ -1,5 +1,4 @@
-﻿using SISE.Helpers;
-using SISE.Solution;
+﻿using SISE.Logic;
 using System;
 using System.Diagnostics;
 

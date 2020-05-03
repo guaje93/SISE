@@ -1,32 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SISE.Model;
 using System.Linq;
-using System.Text;
 
-namespace SISE.Solution
+namespace SISE.Logic
 {
-    public class DepthFirstSearchSolver : ISolver
+    public class BreadthFirstSearchSolver : ISolver
     {
-        #region Fields
-
-        private readonly int _maxPossibleDepth = 20;
-
-        #endregion
-
         #region Properties
-
+        
         public State Solved { get; }
         public State InitialState { get; private set; }
         public int MaxDepth { get; private set; }
         public string SearchOrder { get; private set; }
-        public int StatesProcessedAmount { get; private set; }
         public int StatesVisitedAmount { get; private set; }
+        public int StatesProcessedAmount { get; private set; }
 
         #endregion
 
         #region Constructors
 
-        public DepthFirstSearchSolver(State _initialState, string _neighborhoodSearchOrder, State _solved)
+        public BreadthFirstSearchSolver(State _initialState, string _neighborhoodSearchOrder, State _solved)
         {
             MaxDepth = int.MinValue;
             InitialState = _initialState;
@@ -40,53 +33,48 @@ namespace SISE.Solution
 
         public string Solve()
         {
-            bool solutionFound = false;
+            Queue<State> toVisit = new Queue<State>();
+            Queue<State> visited = new Queue<State>();
             string solutionString = "";
+            bool solutionFound = false;
 
-            Stack<State> visited = new Stack<State>();
-            Stack<State> toVisit = new Stack<State>();
-            toVisit.Push(InitialState);
-            StatesVisitedAmount = 1;
-            while (toVisit.Count != 0 )
+            toVisit.Enqueue(InitialState);
+
+            while (toVisit.Count > 0 )
             {
-                State currentState = toVisit.Pop();
+                State currentState = toVisit.Dequeue();
+                visited.Enqueue(currentState);
 
                 if (currentState.Depth > MaxDepth)
                     MaxDepth = currentState.Depth;
-                
-//                Console.WriteLine(currentState);
-//                Console.WriteLine("\n");
+
+                //Console.WriteLine(currentState);
+                //Console.WriteLine("\n");
 
                 if ((this as ISolver).IsPuzzleSolution(currentState, Solved))
                 {
-                    solutionFound = true;
                     solutionString = currentState.MoveSet;
+                    solutionFound = true;
                     break;
                 }
                 else
                 {
-                    if (currentState.Depth > _maxPossibleDepth)
-                    {
-                        continue;
-                    }
-                    visited.Push(currentState);
                     currentState.GenerateNextStates(SearchOrder);
-                    List<State> nextStates = currentState.NextStates;
-                    nextStates.Reverse();
+
                     foreach (State state in currentState.NextStates)
                     {
                         if (!toVisit.Concat(visited).Any(p => p.Equals(state)))
                         {
-                            toVisit.Push(state);
+                            toVisit.Enqueue(state);
                         }
                     }
                 }
             }
 
-            StatesProcessedAmount = visited.Count;
+            StatesVisitedAmount = visited.Count() + toVisit.Count();
+            StatesProcessedAmount = visited.Count();
 
-            return solutionFound == true ? solutionString : "No solution found!";
-
+            return solutionFound ? solutionString : "No solution found!";
         }
 
         #endregion

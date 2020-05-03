@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SISE.Model
+﻿namespace SISE.Model
 {
     class Hamming : IMetric
     {

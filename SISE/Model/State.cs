@@ -1,10 +1,10 @@
-﻿using SISE.Model.Move;
+﻿using SISE.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace SISE
+namespace SISE.Model
 {
     public class State
     {
