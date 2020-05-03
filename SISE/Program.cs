@@ -1,5 +1,6 @@
 ﻿using SISE.Logic;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace SISE
@@ -19,9 +20,13 @@ namespace SISE
 
         static void Main(string[] args)
         {
-            Initializer initializer = Initialize(args);
-            RunSolver();
-            SaveResult(initializer.SolutionFileDestination, initializer.SolutionInformationDestination);
+            List<string[]> agumentsList = LoadArguments();
+            foreach (string[] arguments in agumentsList)
+            {
+                Initializer initializer = Initialize(arguments);
+                RunSolver();
+                SaveResult(initializer.SolutionFileDestination, initializer.SolutionInformationDestination);
+            }
         }
 
         private static Initializer Initialize(string[] args)
