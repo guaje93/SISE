@@ -9,66 +9,82 @@ namespace SISE
 {
     public class AStarSolver : ISolver
     {
+        #region Fields
 
-        public int MaxDepth { get; private set; }
-        public State SolutionState { get; private set; }
-        public int NumberOfVisitedStates { get; private set; }
-        public int NumberOfProcessedStates { get; private set; }
+        private readonly PriorityQueue<State> _priorityQueue = new PriorityQueue<State>();
+        private readonly IMetric _metric;
+
+        #endregion
+
+        #region Properties
+
         public State Solved { get; }
-        private PriorityQueue<State> priorityQueue;
-        IMetric metric;
+        public State InitialState { get; private set; }
+        public int MaxDepth { get; private set; }
+        public int StatesVisitedAmount { get; private set; }
+        public int StatesProcessedAmount { get; private set; }
+
+        #endregion
+
+        #region Constructors
 
         public AStarSolver(State _initialState, IMetric metric , State _solved)
         {
             MaxDepth = int.MinValue;
-            this.metric = metric;
-            SolutionState = _initialState;
+            this._metric = metric;
+            InitialState = _initialState;
             Solved = _solved;
         }
 
+        #endregion
+
+        #region Methods
+
         public string Solve()
         {
-            priorityQueue = new PriorityQueue<State>();
             bool solutionFound = false;
             string solutionString = "";
             List<State> visitedStates = new List<State>();
-            NumberOfProcessedStates = 0;
+            StatesProcessedAmount = 0;
             State currentState;
-            priorityQueue.Enqueue(SolutionState);
+            _priorityQueue.Enqueue(InitialState);
 
-            while (priorityQueue.Count > 0)
+            while (_priorityQueue.Count() > 0)
             {
-                currentState = priorityQueue.Dequeue();
+                currentState = _priorityQueue.Dequeue();
                 if (visitedStates.Any())
                 {
                     while(visitedStates.Any(p=>p.Equals(currentState)))
-                        currentState = priorityQueue.Dequeue();
+                        currentState = _priorityQueue.Dequeue();
                 }
 
-                if (currentState.depth > MaxDepth)
-                    MaxDepth = currentState.depth;
+                if (currentState.Depth > MaxDepth)
+                    MaxDepth = currentState.Depth;
+
+            //Console.WriteLine(currentState);
+            //Console.WriteLine("\n");
 
                 if ((this as ISolver).IsPuzzleSolution(currentState, Solved))
                 {
-                    solutionString = currentState.moveSet;
+                    solutionString = currentState.MoveSet;
                     solutionFound = true;
                     break;
                 }
 
                 currentState.GenerateNextStates("lurd");
-                foreach (State nextState in currentState.nextStates)
+                foreach (State nextState in currentState.NextStates)
                 {
-                    NumberOfProcessedStates++;
-                    int heuresticValue = metric.GetDistanceFromSolution(nextState) + nextState.depth;
-                    priorityQueue.Enqueue(nextState, heuresticValue);
+                    StatesProcessedAmount++;
+                    int heuresticValue = _metric.GetDistanceFromSolution(nextState) + nextState.Depth;
+                    _priorityQueue.Enqueue(nextState, heuresticValue);
                 }
                 visitedStates.Add(currentState);
-            Console.WriteLine(currentState);
-            Console.WriteLine("\n");
             }
 
-            NumberOfVisitedStates = visitedStates.Count();
+            StatesVisitedAmount = visitedStates.Count();
             return solutionFound ? solutionString : "No solution found!";
         }
+
+        #endregion
     }
 }

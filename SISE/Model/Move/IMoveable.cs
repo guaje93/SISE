@@ -8,8 +8,5 @@ namespace SISE.Model.Move
     public interface IMoveable
     {
         State Move(State state, char direction);
-
-
-
     }
 }

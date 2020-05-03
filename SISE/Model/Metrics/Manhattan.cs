@@ -6,6 +6,8 @@ namespace SISE.Model
 {
     class Manhattan : IMetric
     {
+        #region Methods
+
         public int GetDistanceFromSolution(State from)
         {
             int distance = 0;
@@ -14,7 +16,7 @@ namespace SISE.Model
             {
                 for (int j = 0; j < State.Height; j++)
                 {
-                    int value = from.puzzle[i, j];
+                    int value = from.Puzzle[i, j];
                     if (i == State.Height - 1 && j == State.Width - 1)
                     {
                         solutionValue = 0;
@@ -30,6 +32,7 @@ namespace SISE.Model
             return distance;
         }
 
+        #endregion
         
     }
 }

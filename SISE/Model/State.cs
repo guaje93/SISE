@@ -8,45 +8,65 @@ namespace SISE
 {
     public class State
     {
-        public State previousState;
-        public List<State> nextStates;
-        public int[,] puzzle;
-        public char move;
-        public String moveSet;
-        public static int Width { get; private set; }
-        public static int Height { get; private set; }
-        public Point zeroIndex;
-        public int depth = 0;
+        #region Fields
+
         private readonly Mediator _mediator = new Mediator();
 
+        #endregion
+
+        #region Static Properties
+
+        public static int Height { get; private set; }
+        public static int Width { get; private set; }
+        
+        #endregion
+
+        #region Properties
+
+        public State PreviousState { get; set; }
+        public List<State> NextStates { get; set; }
+        public int[,] Puzzle { get; set; }
+        public char Move { get; set; }
+        public string MoveSet { get; set; }
+        public Point ZeroIndex { get; set; }
+        public int Depth { get; set; } = 0;
+
+        #endregion
+
+        #region Constructors
+
+        public State(State state)
+        {
+            Puzzle = new int[State.Height, State.Width];
+            NextStates = new List<State>();
+            Array.Copy(state.Puzzle, Puzzle, state.Puzzle.Length);
+            ZeroIndex = new Point(state.ZeroIndex.X, state.ZeroIndex.Y);
+            MoveSet = state.MoveSet;
+        }
+        public State(int[,] p, Point point)
+        {
+            NextStates = new List<State>();
+            Puzzle = new int[Height, Width];
+            ZeroIndex = point;
+            Array.Copy(p, Puzzle, p.Length);
+            ZeroIndex = point;
+            MoveSet = "";
+        }
         public State(int[,] p, Point point, Tuple<int, int> matrix)
         {
             Width = matrix.Item1;
             Height = matrix.Item2;
-            nextStates = new List<State>();
-            puzzle = new int[Height, Width];
-            zeroIndex = point;
-            Array.Copy(p, puzzle, p.Length);
-            zeroIndex = point;
-            moveSet = "";
+            NextStates = new List<State>();
+            Puzzle = new int[Height, Width];
+            ZeroIndex = point;
+            Array.Copy(p, Puzzle, p.Length);
+            ZeroIndex = point;
+            MoveSet = "";
         }
-        public State(int[,] p, Point point)
-        {
-            nextStates = new List<State>();
-            puzzle = new int[Height, Width];
-            zeroIndex = point;
-            Array.Copy(p, puzzle, p.Length);
-            zeroIndex = point;
-            moveSet = "";
-        }
-        public State(State state)
-        {
-            puzzle = new int[State.Height, State.Width];
-            nextStates = new List<State>();
-            Array.Copy(state.puzzle, puzzle, state.puzzle.Length);
-            zeroIndex = new Point(state.zeroIndex.X, state.zeroIndex.Y);
-            moveSet = state.moveSet;
-        }
+
+        #endregion
+
+        #region Methods
 
         public void GenerateNextStates(string order)
         {
@@ -54,10 +74,14 @@ namespace SISE
             {
                 if (_mediator.IsMoveAllowed(this,direction))
                 {
-                    nextStates.Add(_mediator.Move(this,direction));
+                    NextStates.Add(_mediator.Move(this,direction));
                 }
             }
         }
+
+        #endregion
+
+        #region Override Methods
 
         public override string ToString()
         {
@@ -65,7 +89,7 @@ namespace SISE
             for (int i = 0; i < Height; i++)
             {
                 for (int j = 0; j < Width; j++)
-                    text.Append(puzzle[i, j] + " ");
+                    text.Append(Puzzle[i, j] + " ");
                 text.Append("\n");
             }
 
@@ -77,7 +101,7 @@ namespace SISE
             {
                 for (int j = 0; j < State.Width; j++)
                 {
-                    if (this.puzzle[i, j] != (obj as State).puzzle[i, j])
+                    if (this.Puzzle[i, j] != (obj as State).Puzzle[i, j])
                     {
                         return false;
                     }
@@ -88,7 +112,9 @@ namespace SISE
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(puzzle);
+            return HashCode.Combine(Puzzle);
         }
+
+        #endregion
     }
 }

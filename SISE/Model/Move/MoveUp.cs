@@ -7,21 +7,23 @@ namespace SISE.Model.Move
 {
     public class MoveUp : IMoveable
     {
+        #region Methods
+
         public State Move(State state, char direction)
         {
             State newState = new State(state);
-            newState.move = direction;
-            newState.moveSet += direction;
-            newState.previousState = state;
-            newState.depth = state.depth + 1;
+            newState.Move = direction;
+            newState.MoveSet += direction;
+            newState.PreviousState = state;
+            newState.Depth = state.Depth + 1;
             MoveZero(state, newState);
             return newState;
         }
 
         private void MoveZero(State state, State newState)
         {
-            Swap(ref newState.puzzle[state.zeroIndex.X, state.zeroIndex.Y], ref newState.puzzle[state.zeroIndex.X - 1, state.zeroIndex.Y]);
-            newState.zeroIndex.X--;
+            Swap(ref newState.Puzzle[state.ZeroIndex.X, state.ZeroIndex.Y], ref newState.Puzzle[state.ZeroIndex.X - 1, state.ZeroIndex.Y]);
+            newState.ZeroIndex = new Point(newState.ZeroIndex.X - 1, newState.ZeroIndex.Y);
         }
 
         private void Swap<T>(ref T lhs, ref T rhs)
@@ -30,5 +32,7 @@ namespace SISE.Model.Move
             lhs = rhs;
             rhs = temp;
         }
+
+        #endregion
     }
 }

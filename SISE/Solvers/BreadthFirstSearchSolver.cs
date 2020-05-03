@@ -7,19 +7,31 @@ namespace SISE
 {
     public class BreadthFirstSearchSolver : ISolver
     {
+        #region Properties
+        
         public State Solved { get; }
+        public State InitialState { get; private set; }
+        public int MaxDepth { get; private set; }
+        public string SearchOrder { get; private set; }
+        public int StatesVisitedAmount { get; private set; }
+        public int StatesProcessedAmount { get; private set; }
+
+        #endregion
+
+        #region Constructors
+
         public BreadthFirstSearchSolver(State _initialState, string _neighborhoodSearchOrder, State _solved)
         {
             MaxDepth = int.MinValue;
-            SolutionState = _initialState;
-            NeighborhoodSearchOrder = _neighborhoodSearchOrder.ToLower();
+            InitialState = _initialState;
+            SearchOrder = _neighborhoodSearchOrder.ToLower();
             Solved = _solved;
         }
-        public int MaxDepth { get; private set; }
-        public State SolutionState { get; private set; }
-        public string NeighborhoodSearchOrder { get; private set; }
-        public int NumberOfVisitedStates { get; private set; }
-        public int NumberOfProcessedStates { get; private set; }
+
+        #endregion
+
+        #region Methods
+
         public string Solve()
         {
             Queue<State> toVisit = new Queue<State>();
@@ -27,30 +39,30 @@ namespace SISE
             string solutionString = "";
             bool solutionFound = false;
 
-            toVisit.Enqueue(SolutionState);
+            toVisit.Enqueue(InitialState);
 
             while (toVisit.Count > 0 )
             {
                 State currentState = toVisit.Dequeue();
                 visited.Enqueue(currentState);
 
-                if (currentState.depth > MaxDepth)
-                    MaxDepth = currentState.depth;
+                if (currentState.Depth > MaxDepth)
+                    MaxDepth = currentState.Depth;
 
-                Console.WriteLine(currentState);
-                Console.WriteLine("\n");
+                //Console.WriteLine(currentState);
+                //Console.WriteLine("\n");
 
                 if ((this as ISolver).IsPuzzleSolution(currentState, Solved))
                 {
-                    solutionString = currentState.moveSet;
+                    solutionString = currentState.MoveSet;
                     solutionFound = true;
                     break;
                 }
                 else
                 {
-                    currentState.GenerateNextStates(NeighborhoodSearchOrder);
+                    currentState.GenerateNextStates(SearchOrder);
 
-                    foreach (State state in currentState.nextStates)
+                    foreach (State state in currentState.NextStates)
                     {
                         if (!toVisit.Concat(visited).Any(p => p.Equals(state)))
                         {
@@ -60,10 +72,12 @@ namespace SISE
                 }
             }
 
-            NumberOfVisitedStates = visited.Count() + toVisit.Count();
-            NumberOfProcessedStates = visited.Count();
+            StatesVisitedAmount = visited.Count() + toVisit.Count();
+            StatesProcessedAmount = visited.Count();
 
             return solutionFound ? solutionString : "No solution found!";
         }
+
+        #endregion
     }
 }

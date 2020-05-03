@@ -6,6 +6,8 @@ namespace SISE.Model
 {
     class Hamming : IMetric
     {
+        #region Methods
+
         public int GetDistanceFromSolution(State from)
         {
             int distance = 0;
@@ -22,7 +24,7 @@ namespace SISE.Model
                     {
                         expectedValue = i * State.Height + j + 1;
                     }
-                    if (from.puzzle[i, j] != expectedValue)
+                    if (from.Puzzle[i, j] != expectedValue)
                     {
                         distance++;
                     }
@@ -30,5 +32,7 @@ namespace SISE.Model
             }
             return distance;
         }
+
+        #endregion
     }
 }

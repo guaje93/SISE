@@ -1,38 +1,41 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SISE.Helpers
 {
     public class PriorityQueue<T>
     {
-        SortedDictionary<int, Queue<T>> priorityQueue = new SortedDictionary<int, Queue<T>>();
-        public int Count = 0;
+        #region Fields
 
-        public void Enqueue(T item)
-        {
-            this.Enqueue(item, -1);
-        }
+        private readonly SortedDictionary<int, Queue<T>> _priorityQueue = new SortedDictionary<int, Queue<T>>();
 
-        public void Enqueue(T item, int priority)
+        #endregion
+
+        #region Methods
+
+        public void Enqueue(T item, int priority = -1)
         {
-            if (!priorityQueue.ContainsKey(priority))
+            if (!_priorityQueue.ContainsKey(priority))
             {
-                priorityQueue.Add(priority, new Queue<T>());
+                _priorityQueue.Add(priority, new Queue<T>());
             }
-            priorityQueue[priority].Enqueue(item);
-            Count++;
+            _priorityQueue[priority].Enqueue(item);
         }
 
         public T Dequeue()
         {
-            int minKey = priorityQueue.Keys.Min();
-            T item = priorityQueue[minKey].Dequeue();
-            if (priorityQueue[minKey].Count == 0)
+            int minKey = _priorityQueue.Keys.Min();
+            T item = _priorityQueue[minKey].Dequeue();
+            if (_priorityQueue[minKey].Count == 0)
             {
-                priorityQueue.Remove(minKey);
+                _priorityQueue.Remove(minKey);
             }
-            Count--;
             return item;
         }
+
+        public int Count() => _priorityQueue.Count();
+        
+        #endregion
     }
 }
