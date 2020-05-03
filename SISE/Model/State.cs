@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SISE.Model.Move;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
@@ -16,6 +17,7 @@ namespace SISE
         public static int Height { get; private set; }
         public Point zeroIndex;
         public int depth = 0;
+        private readonly Mediator _mediator = new Mediator();
 
         public State(int[,] p, Point point, Tuple<int, int> matrix)
         {
@@ -46,69 +48,15 @@ namespace SISE
             moveSet = state.moveSet;
         }
 
-        public State Move(char direction)
-        {
-            State newState = new State(this);
-            newState.move = direction;
-            newState.moveSet += direction;
-            newState.previousState = this;
-            newState.depth = depth + 1;
-            switch (direction)
-            {
-                case 'u':
-                    Swap(ref newState.puzzle[zeroIndex.X, zeroIndex.Y], ref newState.puzzle[zeroIndex.X - 1, zeroIndex.Y]);
-                    newState.zeroIndex.X--;
-                    break;
-                case 'd':
-                    Swap(ref newState.puzzle[zeroIndex.X, zeroIndex.Y], ref newState.puzzle[zeroIndex.X + 1, zeroIndex.Y]);
-                    newState.zeroIndex.X++;
-                    break;
-                case 'l':
-                    Swap(ref newState.puzzle[zeroIndex.X, zeroIndex.Y], ref newState.puzzle[zeroIndex.X, zeroIndex.Y - 1]);
-                    newState.zeroIndex.Y--;
-                    break;
-                case 'r':
-                    Swap(ref newState.puzzle[zeroIndex.X, zeroIndex.Y], ref newState.puzzle[zeroIndex.X, zeroIndex.Y + 1]);
-                    newState.zeroIndex.Y++;
-                    break;
-                default:
-                    break;
-            }
-            return newState;
-        }
-
         public void GenerateNextStates(string order)
         {
             foreach (char direction in order)
             {
-                if (IsMoveAllowed(direction))
+                if (_mediator.IsMoveAllowed(this,direction))
                 {
-                    nextStates.Add(Move(direction));
+                    nextStates.Add(_mediator.Move(this,direction));
                 }
             }
-        }
-
-        private bool IsMoveAllowed(char direction) => IsNotOutOfBound(direction) && IsNotTurningBack(direction);
-
-        private bool IsNotOutOfBound(char direction)
-        {
-            return  !((!"udlr".Contains(direction.ToString())) ||
-                    (zeroIndex.X == 0 && direction == 'u') ||
-                    (zeroIndex.X == Height - 1 && direction == 'd') ||
-                    (zeroIndex.Y == 0 && direction == 'l') ||
-                    (zeroIndex.Y == Width - 1 && direction == 'r'));
-        }
-        private bool IsNotTurningBack(char direction) => 
-                    !((move == 'l' && direction == 'r') ||
-                     (this.move == 'u' && direction == 'd') ||
-                     (this.move == 'r' && direction == 'l') ||
-                     (this.move == 'd' && direction == 'u'));
-
-        private void Swap<T>(ref T lhs, ref T rhs)
-        {
-            T temp = lhs;
-            lhs = rhs;
-            rhs = temp;
         }
 
         public override string ToString()

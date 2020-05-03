@@ -2,7 +2,6 @@
 using SISE.Solution;
 using System;
 using System.Diagnostics;
-using System.Drawing;
 
 namespace SISE
 {
@@ -24,7 +23,7 @@ namespace SISE
         {
             var resultGenerator = new ResultGenerators();
             int solutionLength = solutionString != "No solution found!" ? solutionString.Length : -1;
-            resultGenerator.WriteResultState(solutionFileDestination, solutionString);
+            resultGenerator.WriteSolution(solutionFileDestination, solutionString);
             resultGenerator.WriteAdditionalInformation(solutionInformationDestination,
                                                        solutionLength,
                                                        solver.NumberOfVisitedStates,

@@ -6,7 +6,7 @@ namespace SISE.Model
 {
     class Manhattan : IMetric
     {
-        public int GetDistanceToSolution(State from)
+        public int GetDistanceFromSolution(State from)
         {
             int distance = 0;
             int solutionValue = 1;

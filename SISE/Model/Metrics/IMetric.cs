@@ -2,6 +2,6 @@
 {
     public interface IMetric
     {
-        int GetDistanceToSolution(State state);
+        int GetDistanceFromSolution(State state);
     }
 }

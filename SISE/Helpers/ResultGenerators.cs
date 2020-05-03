@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SISE.Helpers
 {
     public class ResultGenerators
     {
-        public void WriteResultState(string resultStateFilePath, string solution)
+        public void WriteSolution(string resultStateFilePath, string solution)
         {
-            int resultLenght = solution != "No solution found!" ? solution.Length : -1;
+            int resultLenght = solution.All(p => "DRUL".Contains(p,StringComparison.OrdinalIgnoreCase)) ? solution.Length : -1;
             using (System.IO.StreamWriter sw = new System.IO.StreamWriter(resultStateFilePath))
             {
                 sw.WriteLine(resultLenght);

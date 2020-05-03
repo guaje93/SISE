@@ -59,7 +59,7 @@ namespace SISE
                 foreach (State nextState in currentState.nextStates)
                 {
                     NumberOfProcessedStates++;
-                    int heuresticValue = metric.GetDistanceToSolution(nextState) + nextState.depth;
+                    int heuresticValue = metric.GetDistanceFromSolution(nextState) + nextState.depth;
                     priorityQueue.Enqueue(nextState, heuresticValue);
                 }
                 visitedStates.Add(currentState);

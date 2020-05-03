@@ -6,7 +6,7 @@ namespace SISE.Model
 {
     class Hamming : IMetric
     {
-        public int GetDistanceToSolution(State from)
+        public int GetDistanceFromSolution(State from)
         {
             int distance = 0;
             for (int i = 0; i < State.Height; i++)
