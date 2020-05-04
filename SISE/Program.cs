@@ -3,17 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SISE
 {
     class Program
     {
         #region Fields
-
-        static ISolver solver;
-        static Stopwatch stopwatch;
-        static string solutionString;
 
         #endregion
 
@@ -22,28 +21,46 @@ namespace SISE
 
         static void Main(string[] args)
         {
-<<<<<<< HEAD
-            List<string[]> agumentsList = LoadArguments();
-            foreach (string[] arguments in agumentsList)
-            {
-                Initializer initializer = Initialize(arguments);
-                RunSolver();
-                SaveResult(initializer.SolutionFileDestination, initializer.SolutionInformationDestination);
-            }
-=======
+            int maxConcurrency = 10;
+
             List<string[]> argumentList = LoadArguments();
-            foreach (string[] argument in argumentList)
+
+
+
+            using (SemaphoreSlim concurrencySemaphore = new SemaphoreSlim(maxConcurrency))
             {
-                Initializer initializer = Initialize(argument);
-                RunSolver();
-                SaveResult(initializer.SolutionFileDestination, initializer.SolutionInformationDestination);
+                var tasks = new List<Task>();
+
+                foreach (var item in argumentList)
+                {
+                    tasks.Add(ProcessPuzzleAsync(item, concurrencySemaphore));
+                }
+
+                var result = Task.WhenAll(tasks);
+                result.Wait();
             }
+        }
+
+        private static async Task ProcessPuzzleAsync(string[] argument, SemaphoreSlim concurrencySemaphore)
+        {
+            await Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    Initializer initializer = Initialize(argument);
+                    RunSolver(initializer);
+                }
+                finally
+                {
+                    concurrencySemaphore.Release();
+                }
+            });
         }
 
         private static List<string[]> LoadArguments()
         {
             List<string[]> launchArgs = new List<string[]>();
-            string[] strategies = { "bfs", "dfs", "astrM", "astrH" };
+            string[] strategies = { "astrM", "astrH" };
             string[] searchOrders = { "RDUL", "RDLU", "DRUL", "DRLU", "LUDR", "LURD", "ULDR", "ULRD" };
             string workingDirectory = Environment.CurrentDirectory;
             string projectDir = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Data\"));
@@ -58,9 +75,9 @@ namespace SISE
                 {
                     if (strategy == "astrM" || strategy == "astrH")
                     {
-                        var heuristic = strategy == "astrM" ? "Manhattan" : "Hamming";
+                        var heuristic = strategy == "astrM" ? "manh" : "hamm";
                         var splittedResultFileName = file.Substring(file.LastIndexOf(@"\") + 1).Split('.')[0];
-                        var baseResultName = $"{results}{splittedResultFileName}_{heuristic}_astr_"; 
+                        var baseResultName = $"{results}{splittedResultFileName}_{heuristic}_astr_";
 
                         var solutionFileName = $"{baseResultName}_sol.txt";
                         var resultFileName = $"{baseResultName}stas.txt";
@@ -100,7 +117,6 @@ namespace SISE
             }
 
             return launchArgs;
->>>>>>> 75787255bb1480c9273fcd082ed5787e5baf3e91
         }
 
         private static Initializer Initialize(string[] args)
@@ -110,34 +126,35 @@ namespace SISE
                 Environment.Exit(-1);
             }
             var initializer = new Initializer(args);
-            solver = initializer.Solver;
             return initializer;
         }
 
-        private static void RunSolver()
+        private static void RunSolver(Initializer initializer)
         {
-            Console.WriteLine($"Solver {solver.GetType().Name}: start processing at {System.DateTime.Now.ToShortTimeString()}");
-            stopwatch = Stopwatch.StartNew();
-            solutionString = solver.Solve();
+            //Console.WriteLine($"Solver {initializer.Solver.GetType().Name}: start processing at {System.DateTime.Now.ToShortTimeString()}");
+            var stopwatch = Stopwatch.StartNew();
+            var solutionString = initializer.Solver.Solve();
             stopwatch.Stop();
-            Console.WriteLine($"Solver {solver.GetType().Name}: finished in {stopwatch.ElapsedMilliseconds}ms");
+            //Console.WriteLine($"Solver {initializer.Solver.GetType().Name}: finished in {stopwatch.ElapsedMilliseconds}ms");
+            SaveResult(initializer, solutionString, stopwatch);
+
         }
 
-        private static void SaveResult(string solutionFileDestination, string solutionInformationDestination)
+        private static void SaveResult(Initializer initializer, string solutionString, Stopwatch stopwatch)
         {
             var resultGenerator = new ResultGenerators();
             int solutionLength = solutionString != "No solution found!" ? solutionString.Length : -1;
-            var resultSaved = resultGenerator.WriteSolution(solutionFileDestination, solutionString);
-            var additionalResultSaved = resultGenerator.WriteAdditionalInformation(solutionInformationDestination,
+            var resultSaved = resultGenerator.WriteSolution(initializer.SolutionFileDestination, solutionString);
+            var additionalResultSaved = resultGenerator.WriteAdditionalInformation(initializer.SolutionInformationDestination,
                                                        solutionLength,
-                                                       solver.StatesVisitedAmount,
-                                                       solver.StatesProcessedAmount,
-                                                       solver.MaxDepth,
+                                                       initializer.Solver.StatesVisitedAmount,
+                                                       initializer.Solver.StatesProcessedAmount,
+                                                       initializer.Solver.MaxDepth,
                                                        stopwatch.ElapsedMilliseconds);
             if (resultSaved && additionalResultSaved)
             {
-                Console.WriteLine("Result saved");
-                Console.WriteLine($"Additional information saved");
+                //Console.WriteLine("Result saved");
+                //Console.WriteLine($"Additional information saved");
             }
         }
 

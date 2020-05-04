@@ -74,7 +74,7 @@ namespace SISE.Logic
                 return false;
             }
 
-            Console.WriteLine($"Initializer: Argument validation passed");
+            //Console.WriteLine($"Initializer: Argument validation passed");
             return true;
 
         }
